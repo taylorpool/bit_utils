@@ -5,6 +5,49 @@
 
 using namespace bit_utils;
 
+TEST(TestEndian, TestFlipEndian)
+{
+    std::bitset<2> bits;
+    bits[0] = 1;
+    bits[1] = 0;
+    std::bitset<2> flipped_bits = flip_endian(bits);
+    ASSERT_EQ(flipped_bits[0], 0);
+    ASSERT_EQ(flipped_bits[1], 1);
+}
+
+TEST(TestEndian, TestFlipEndian2)
+{
+    std::bitset<4> bits("0111");
+    ASSERT_EQ(flip_endian(bits), std::bitset<4>("1110"));
+}
+
+TEST(Subbits, S0111_01)
+{
+    std::bitset<4> bits;
+    bits[1] = 1;
+    bits[2] = 1;
+    bits[3] = 1;
+
+    std::bitset<2> answer;
+    answer[0] = 0;
+    answer[1] = 1;
+    ASSERT_EQ( (subset<0,2>(bits)), answer);
+}
+
+TEST(Subbits, S0111_011)
+{
+    std::bitset<4> bits;
+    bits[1] = 1;
+    bits[2] = 1;
+    bits[3] = 1;
+
+    std::bitset<3> answer;
+    answer[0] = 0;
+    answer[1] = 1;
+    answer[2] = 1;
+    ASSERT_EQ( (subset<0,3>(bits)), answer);
+}
+
 TEST(BitsinBytes, byte1)
 {
     uint8_t my_byte = 0b00001111;

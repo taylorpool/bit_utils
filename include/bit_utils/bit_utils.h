@@ -7,6 +7,26 @@
 namespace bit_utils
 {
 
+template<size_t num_bits> std::bitset<num_bits> flip_endian(const std::bitset<num_bits> &bits)
+{
+    std::bitset<num_bits> result;
+    for(int bit_index = 0; bit_index < num_bits; ++bit_index)
+    {
+        result[bit_index] = bits[num_bits-bit_index-1];
+    }
+    return result;
+}
+
+template<size_t start_pos, size_t end_pos, size_t num_bits> std::bitset<end_pos-start_pos> subset(const std::bitset<num_bits> &bits)
+{
+    std::bitset<end_pos-start_pos> sub_bits;
+    for(int index = 0; index < sub_bits.size(); ++index)
+    {
+        sub_bits[index] = bits[index+start_pos];
+    }
+    return sub_bits;
+}
+
 template <class T, class R> T get_bits(const R* buffer, int position, int length = sizeof(T))
 {
     size_t T_size = sizeof(T)*8;
