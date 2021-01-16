@@ -176,3 +176,16 @@ TEST(IncreaseSignedTypeSize, SixBitsSignedTo_Negative11)
     int8_t answer = get_bits<int8_t>(&six_bits, 2, 6);
     ASSERT_EQ(answer, -11);
 }
+
+TEST(LittleEndianess, 32vs8)
+{
+    union
+    {
+        uint32_t four_byte = 0x01234567;
+        uint8_t bytes[4];
+    };
+    ASSERT_EQ(get_bits<uint8_t>(&four_byte, 0, 8), bytes[3]);
+    ASSERT_EQ(get_bits<uint8_t>(&four_byte, 8, 8), bytes[2]);
+    ASSERT_EQ(get_bits<uint8_t>(&four_byte, 16, 8), bytes[1]);
+    ASSERT_EQ(get_bits<uint8_t>(&four_byte, 24, 8), bytes[0]);
+}
