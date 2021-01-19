@@ -51,49 +51,49 @@ TEST(Subbits, S0111_011)
 TEST(BitsinBytes, byte1)
 {
     uint8_t my_byte = 0b00001111;
-    ASSERT_EQ(get_bits<uint8_t>(&my_byte, 7, 1), 0b1);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&my_byte, 7, 1), 0b1);
 }
 
 TEST(BitsinBytes, bit2)
 {
     uint8_t my_byte = 0b00001111;
-    ASSERT_EQ(get_bits<uint8_t>(&my_byte, 6, 1), 0b1);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&my_byte, 6, 1), 0b1);
 }
 
 TEST(BitsinBytes, bit3)
 {
     uint8_t my_byte = 0b00001011;
-    ASSERT_EQ(get_bits<uint8_t>(&my_byte, 5, 1), 0b0);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&my_byte, 5, 1), 0b0);
 }
 
 TEST(BitsinBytes, bits1and2)
 {
     uint8_t my_byte = 0b00001011;
-    ASSERT_EQ(get_bits<uint8_t>(&my_byte, 6, 2), 0b11);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&my_byte, 6, 2), 0b11);
 }
 
 TEST(BitsinBytes, bits1and2and3and4)
 {
     uint8_t my_byte = 0b00001011;
-    ASSERT_EQ(get_bits<uint8_t>(&my_byte, 4, 4), 0b1011);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&my_byte, 4, 4), 0b1011);
 }
 
 TEST(BitsinBytes, bits2and3and4)
 {
     uint8_t my_byte = 0b00001011;
-    ASSERT_EQ(get_bits<uint8_t>(&my_byte, 4, 3), 0b101);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&my_byte, 4, 3), 0b101);
 }
 
 TEST(GetBitsMSB, Get_MSB_1)
 {
     uint32_t number = 0xFF000000;
-    ASSERT_EQ(get_bits<uint8_t>(&number, 0, 1), 1);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&number, 0, 1), 1);
 }
 
 TEST(GetBitsMSB, Get_LSB_0)
 {
     uint32_t number = 0xFF000000;
-    ASSERT_EQ(get_bits<uint8_t>(&number, 31, 1), 0);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&number, 31, 1), 0);
 }
 
 class BitTestFixture: public ::testing::TestWithParam<int>
@@ -108,21 +108,21 @@ TEST_P(BitTestFixture, GPS_Preamble)
 {
     int bit = GetParam();
     size_t data_size = sizeof(gps_preamble)*8;
-    ASSERT_EQ(get_bits<uint8_t>(&gps_preamble, bit, 1), ((gps_preamble>>(data_size-bit-1)) & 1U));
+    ASSERT_EQ(get_msb_bits<uint8_t>(&gps_preamble, bit, 1), ((gps_preamble>>(data_size-bit-1)) & 1U));
 }
 
 TEST_P(BitTestFixture, TLM_Word)
 {
     int bit = GetParam();
     size_t data_size = sizeof(tlm_word)*8;
-    ASSERT_EQ(get_bits<uint8_t>(&tlm_word, bit, 1), ((tlm_word>>(data_size-bit-1)) & 1U));
+    ASSERT_EQ(get_msb_bits<uint8_t>(&tlm_word, bit, 1), ((tlm_word>>(data_size-bit-1)) & 1U));
 }
 
 TEST_P(BitTestFixture, HOV_Word)
 {
     int bit = GetParam();
     size_t data_size = sizeof(hov_word)*8;
-    ASSERT_EQ(get_bits<uint8_t>(&hov_word, bit, 1), ((hov_word>>(data_size-bit-1)) & 1U));
+    ASSERT_EQ(get_msb_bits<uint8_t>(&hov_word, bit, 1), ((hov_word>>(data_size-bit-1)) & 1U));
 }
 
 INSTANTIATE_TEST_CASE_P
@@ -149,7 +149,7 @@ TEST(GetBitsMSB, StraddleBytes)
     int start_bit = 7;
     int num_bits = 2;
 
-    uint8_t answer = get_bits<uint8_t>(numbers, start_bit, num_bits);
+    uint8_t answer = get_msb_bits<uint8_t>(numbers, start_bit, num_bits);
     ASSERT_EQ(answer, 3);
 }
 
@@ -161,7 +161,7 @@ TEST(GetBitsMSB, StraddleByte2)
     int start_bit = 7;
     int num_bits = 3;
 
-    uint8_t answer = get_bits<uint8_t>(numbers, start_bit, num_bits);
+    uint8_t answer = get_msb_bits<uint8_t>(numbers, start_bit, num_bits);
     ASSERT_EQ(answer, 7);
 }
 
@@ -171,7 +171,7 @@ TEST(GetBitsMSB, StraddleByte3)
     numbers[0] = 0x01;
     numbers[1] = 0b01000000;
     
-    uint8_t answer = get_bits<uint8_t>(numbers, 7, 3);
+    uint8_t answer = get_msb_bits<uint8_t>(numbers, 7, 3);
     ASSERT_EQ(answer, 5);
 }
 
@@ -194,7 +194,7 @@ TEST(IncreaseSignedTypeSize, FiveBitSignedTo_Negative11)
     number |= (1UL << (2));
     number |= (1UL << (4));
 
-    int8_t answer = get_bits<int8_t>(&number, 3, 5);
+    int8_t answer = get_msb_bits<int8_t>(&number, 3, 5);
     ASSERT_EQ(answer, -11);
 }
 
@@ -204,7 +204,7 @@ TEST(IncreaseSignedTypeSize, FiveBitSignedTo_5)
     number |= 1UL << 0;
     number |= 1UL << 2;
 
-    int8_t answer = get_bits<int8_t>(&number, 3, 5);
+    int8_t answer = get_msb_bits<int8_t>(&number, 3, 5);
     ASSERT_EQ(answer, 5);
 }
 
@@ -216,7 +216,7 @@ TEST(IncreaseSignedTypeSize, SixBitsSignedTo_Negative11)
     six_bits |= 1UL << 4;
     six_bits |= 1UL << 5;
     
-    int8_t answer = get_bits<int8_t>(&six_bits, 2, 6);
+    int8_t answer = get_msb_bits<int8_t>(&six_bits, 2, 6);
     ASSERT_EQ(answer, -11);
 }
 
@@ -227,8 +227,37 @@ TEST(LittleEndianess, 32vs8)
         uint32_t four_byte = 0x01234567;
         uint8_t bytes[4];
     };
-    ASSERT_EQ(get_bits<uint8_t>(&four_byte, 0, 8), bytes[3]);
-    ASSERT_EQ(get_bits<uint8_t>(&four_byte, 8, 8), bytes[2]);
-    ASSERT_EQ(get_bits<uint8_t>(&four_byte, 16, 8), bytes[1]);
-    ASSERT_EQ(get_bits<uint8_t>(&four_byte, 24, 8), bytes[0]);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&four_byte, 0, 8), bytes[3]);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&four_byte, 8, 8), bytes[2]);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&four_byte, 16, 8), bytes[1]);
+    ASSERT_EQ(get_msb_bits<uint8_t>(&four_byte, 24, 8), bytes[0]);
+}
+
+class GetLSBBitsFixture: public ::testing::Test
+{
+    protected:
+        uint32_t four_byte;
+        void SetUp() override
+        {
+            four_byte = 0x01234567;
+        }
+};
+
+TEST_F(GetLSBBitsFixture, 32vs8)
+{
+    ASSERT_EQ(get_lsb_bits<uint8_t>(&four_byte, 0, 8), 0x67);
+    ASSERT_EQ(get_lsb_bits<uint8_t>(&four_byte, 8, 8), 0x45);
+    ASSERT_EQ(get_lsb_bits<uint8_t>(&four_byte, 16, 8), 0x23);
+    ASSERT_EQ(get_lsb_bits<uint8_t>(&four_byte, 24, 8), 0x01);
+}
+
+TEST_F(GetLSBBitsFixture, 32vs16)
+{
+    ASSERT_EQ(get_lsb_bits<uint16_t>(&four_byte, 0, 16), 0x4567);
+    ASSERT_EQ(get_lsb_bits<uint16_t>(&four_byte, 16, 16), 0x0123);
+}
+
+TEST_F(GetLSBBitsFixture, 32vs32)
+{
+    ASSERT_EQ(get_lsb_bits<uint32_t>(&four_byte, 0, 32), four_byte);
 }
