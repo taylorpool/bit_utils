@@ -6,7 +6,10 @@ target_include_directories(bit_utils INTERFACE include)
 
 option(BUILD_BIT_UTILS_TESTS "Build bit_utils tests" OFF)
 if(BUILD_BIT_UTILS_TESTS)
-    find_package(GTest REQUIRED)
+    if(NOT TARGET gtest)
+        add_subdirectory(cmake/gtest build)
+    endif(NOT TARGET gtest)
+    
     add_executable(test_bit_utils
         src/test/test_bit_utils.cpp)
     target_link_libraries(test_bit_utils PUBLIC

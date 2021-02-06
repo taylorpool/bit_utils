@@ -39,7 +39,7 @@ template <class T, class R> T get_msb_bits(const R* buffer, int position, int le
         int word_index = (position+bit_index)/R_size;
         int bit_in_word_index = (position+bit_index)%R_size;
         int shift_factor = R_size - bit_in_word_index - 1;
-        ulong bit_value = ((buffer[word_index] & (1UL<<shift_factor))>>shift_factor);
+        unsigned long bit_value = ((buffer[word_index] & (1UL<<shift_factor))>>shift_factor);
         // std::cout<<"Bit Index: "<<bit_index<<" Word Index: "<<word_index<<" Bit in Word Index: "<<bit_in_word_index<<" Shift Factor: "<<shift_factor<<" Intermediate Step: "<<(buffer[word_index] & (1UL<<shift_factor))<<" Bit Value: "<<bit_value<<std::endl;
         bits |= (bit_value & 1UL) << (length-bit_index-1);
     }
@@ -64,7 +64,7 @@ template <class T, class R> T get_lsb_bits(const R* buffer, int position, int le
         int word_index = (position+bit_index)/R_size;
         int bit_in_word_index = (position+bit_index)%R_size;
         int shift_factor = bit_in_word_index;
-        ulong bit_value = ((buffer[word_index] & (1UL<<shift_factor))>>shift_factor);
+        unsigned long bit_value = ((buffer[word_index] & (1UL<<shift_factor))>>shift_factor);
         bits |= (bit_value & 1UL) << (bit_index);
     }
 

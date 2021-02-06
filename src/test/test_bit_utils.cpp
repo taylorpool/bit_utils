@@ -125,7 +125,7 @@ TEST_P(BitTestFixture, HOV_Word)
     ASSERT_EQ(get_msb_bits<uint8_t>(&hov_word, bit, 1), ((hov_word>>(data_size-bit-1)) & 1U));
 }
 
-INSTANTIATE_TEST_CASE_P
+INSTANTIATE_TEST_SUITE_P
 (
     MSB,
     BitTestFixture,
