@@ -27,6 +27,12 @@ template<size_t start_pos, size_t end_pos, size_t num_bits> std::bitset<end_pos-
     return sub_bits;
 }
 
+template<typename T, typename R> T twos_complement(R bits, int length)
+{
+    size_t T_size = sizeof(T);
+    return R(bits | (((1UL<<(T_size-length))-1)<<length));
+}
+
 template <class T, class R> T get_msb_bits(const R* buffer, int position, int length = sizeof(T))
 {
     size_t T_size = sizeof(T)*8;
@@ -46,7 +52,7 @@ template <class T, class R> T get_msb_bits(const R* buffer, int position, int le
 
     if(std::is_signed<T>::value && (bits & (1UL<<(length-1))) && T_size > length)
     {
-        bits |= (((1UL<<(T_size-length))-1)<<length);
+        bits = twos_complement<T>(bits, length);
     }
     
     return bits;
@@ -70,7 +76,7 @@ template <class T, class R> T get_lsb_bits(const R* buffer, int position, int le
 
     if(std::is_signed<T>::value && (bits & (1UL<<(length-1))) && T_size > length)
     {
-        bits |= (((1UL<<(T_size-length))-1)<<length);
+        bits = twos_complement<T>(bits, length);
     }
 
     return bits;
@@ -79,8 +85,6 @@ template <class T, class R> T get_lsb_bits(const R* buffer, int position, int le
 template <typename T, class R> T splice_msb_bits(const R* buffer, int start_1, int len_1, int start_2, int len_2)
 {
     typedef typename std::make_unsigned<T>::type unsigned_T;
-    size_t T_size = sizeof(T);
-    int length = len_1+len_2;
     T bits = 0;
 
     auto unsigned_bits = (get_msb_bits<unsigned_T>(buffer, start_1, len_1)) << len_2;
@@ -88,7 +92,7 @@ template <typename T, class R> T splice_msb_bits(const R* buffer, int start_1, i
 
     if(std::is_signed<T>::value)
     {
-        bits = T(unsigned_bits | (((1UL<<(T_size-length))-1)<<length));
+        bits = twos_complement<T>(unsigned_bits, len_1+len_2);
     }
     else
     {
