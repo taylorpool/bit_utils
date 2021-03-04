@@ -76,5 +76,27 @@ template <class T, class R> T get_lsb_bits(const R* buffer, int position, int le
     return bits;
 }
 
+template <typename T, class R> T splice_msb_bits(const R* buffer, int start_1, int len_1, int start_2, int len_2)
+{
+    typedef typename std::make_unsigned<T>::type unsigned_T;
+    size_t T_size = sizeof(T);
+    int length = len_1+len_2;
+    T bits = 0;
+
+    auto unsigned_bits = (get_msb_bits<unsigned_T>(buffer, start_1, len_1)) << len_2;
+    unsigned_bits |= get_msb_bits<unsigned_T>(buffer, start_2, len_2);
+
+    if(std::is_signed<T>::value)
+    {
+        bits = T(unsigned_bits | (((1UL<<(T_size-length))-1)<<length));
+    }
+    else
+    {
+        bits = unsigned_bits;
+    }
+
+    return bits;
+}
+
 }
 #endif

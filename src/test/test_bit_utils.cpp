@@ -261,3 +261,39 @@ TEST_F(GetLSBBitsFixture, 32vs32)
 {
     ASSERT_EQ(get_lsb_bits<uint32_t>(&four_byte, 0, 32), four_byte);
 }
+
+TEST(GetSplicedBits, FirstTest)
+{
+    uint8_t bits = 0b10101010;
+    ASSERT_EQ(splice_msb_bits<uint8_t>(&bits,0,1,2,1), 0b11);
+}
+
+TEST(GetSplicedBits, SecondTest)
+{
+    uint8_t bits = 0b10101010;
+    ASSERT_EQ(splice_msb_bits<uint8_t>(&bits,0,2,2,1), 0b101);
+}
+
+TEST(GetSplicedBits, ThirdTest)
+{
+    uint8_t bits = 0b10101010;
+    ASSERT_EQ(splice_msb_bits<uint8_t>(&bits,0,4,4,4), bits);
+}
+
+TEST(GetSplicedBits, SignedFirstTest)
+{
+    int8_t bits = 0b10101010;
+    ASSERT_EQ(splice_msb_bits<int8_t>(&bits,0,4,4,4), bits);
+}
+
+TEST(GetSplicedBits, SignedSecondTest)
+{
+    int8_t bits = 0b10101010;
+    ASSERT_EQ(splice_msb_bits<int8_t>(&bits,0,1,1,1), -2);
+}
+
+TEST(GetSplicedBits, SignedThirdTest)
+{
+    int8_t bits = 0b10101010;
+    ASSERT_EQ(splice_msb_bits<int8_t>(&bits,0,2,4,2), -6);
+}
