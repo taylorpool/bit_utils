@@ -297,3 +297,9 @@ TEST(GetSplicedBits, SignedThirdTest)
     int8_t bits = 0b10101010;
     ASSERT_EQ(splice_msb_bits<int8_t>(&bits,0,2,4,2), -6);
 }
+
+TEST(GetSignedBits, SignedTest)
+{
+    int8_t bits = 0b11110111;
+    ASSERT_EQ(get_msb_bits<int64_t>(&bits,0,8), bits);
+}

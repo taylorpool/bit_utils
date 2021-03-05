@@ -29,7 +29,7 @@ template<size_t start_pos, size_t end_pos, size_t num_bits> std::bitset<end_pos-
 
 template<typename T, typename R> T twos_complement(R bits, int length)
 {
-    size_t T_size = sizeof(T);
+    size_t T_size = sizeof(T)*8;
     return R(bits | (((1UL<<(T_size-length))-1)<<length));
 }
 
@@ -46,7 +46,6 @@ template <class T, class R> T get_msb_bits(const R* buffer, int position, int le
         int bit_in_word_index = (position+bit_index)%R_size;
         int shift_factor = R_size - bit_in_word_index - 1;
         unsigned long bit_value = ((buffer[word_index] & (1UL<<shift_factor))>>shift_factor);
-        // std::cout<<"Bit Index: "<<bit_index<<" Word Index: "<<word_index<<" Bit in Word Index: "<<bit_in_word_index<<" Shift Factor: "<<shift_factor<<" Intermediate Step: "<<(buffer[word_index] & (1UL<<shift_factor))<<" Bit Value: "<<bit_value<<std::endl;
         bits |= (bit_value & 1UL) << (length-bit_index-1);
     }
 
