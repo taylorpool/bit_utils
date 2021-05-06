@@ -303,3 +303,14 @@ TEST(GetSignedBits, SignedTest)
     int8_t bits = 0b11110111;
     ASSERT_EQ(get_msb_bits<int64_t>(&bits,0,8), bits);
 }
+
+TEST(GetSignedSplicedBits, DISABLED_SignedFourthTest)
+{
+    int32_t bits = 0b00100110000001101000110011110100;
+    uint32_t words[10] = {0x22c05d10, 0x28cc2b88,
+                        0x309b4,    0x1a33d03,
+                        0x49ea,     0x87c14f87,
+                        0x7b660e1,  0xb89deb62,
+                        0xbfe9dfb9, 0x9ec00d3c,};
+    ASSERT_EQ(splice_msb_bits<int32_t>())
+}
